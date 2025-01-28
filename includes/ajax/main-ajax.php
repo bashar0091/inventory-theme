@@ -118,6 +118,54 @@ function sell_submission_form_handler()
 add_action('wp_ajax_sell_submission_form_handler', 'sell_submission_form_handler');
 add_action('wp_ajax_nopriv_sell_submission_form_handler', 'sell_submission_form_handler');
 
+/** 
+ * 
+ * quotation_submission_form_handler
+ * 
+ */
+function quotation_submission_form_handler()
+{
+    $billing_from = isset($_POST['billing_from']) ? sanitize_text_field($_POST['billing_from']) : '';
+    $billing_email = isset($_POST['billing_email']) ? sanitize_email($_POST['billing_email']) : '';
+    $billing_phone = isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '';
+
+    $billing_to = isset($_POST['billing_to']) ? sanitize_text_field($_POST['billing_to']) : '';
+    $to_email = isset($_POST['to_email']) ? sanitize_email($_POST['to_email']) : '';
+    $to_phone = isset($_POST['to_phone']) ? sanitize_text_field($_POST['to_phone']) : '';
+
+    $invoice_id = isset($_POST['invoice_id']) ? sanitize_text_field($_POST['invoice_id']) : '';
+    $date_issued = isset($_POST['date_issued']) ? sanitize_text_field($_POST['date_issued']) : '';
+    $due_date = isset($_POST['due_date']) ? sanitize_text_field($_POST['due_date']) : '';
+    $due_amount = isset($_POST['due_amount']) ? sanitize_text_field($_POST['due_amount']) : '';
+
+    $quotation_data = array(
+        'post_title'    => 'Quatation Item No ' . time(),
+        'post_content'  => '',
+        'post_status'   => 'publish',
+        'post_type'     => 'inventory-quotation',
+    );
+    $quotation_id = wp_insert_post($quotation_data);
+    if ($quotation_id) {
+        update_post_meta($quotation_id, 'billing_from', $billing_from);
+        update_post_meta($quotation_id, 'billing_email', $billing_email);
+        update_post_meta($quotation_id, 'billing_phone', $billing_phone);
+
+        update_post_meta($quotation_id, 'billing_to', $billing_to);
+        update_post_meta($quotation_id, 'to_email', $to_email);
+        update_post_meta($quotation_id, 'to_phone', $to_phone);
+
+        update_post_meta($quotation_id, 'invoice_id', $invoice_id);
+        update_post_meta($quotation_id, 'date_issued', $date_issued);
+        update_post_meta($quotation_id, 'due_date', $due_date);
+        update_post_meta($quotation_id, 'due_amount', $due_amount);
+
+        wp_send_json_success(['success' => true, 'cost_type' => 'quotation']);
+    }
+    wp_die();
+}
+add_action('wp_ajax_quotation_submission_form_handler', 'quotation_submission_form_handler');
+add_action('wp_ajax_nopriv_quotation_submission_form_handler', 'quotation_submission_form_handler');
+
 
 /** 
  * 

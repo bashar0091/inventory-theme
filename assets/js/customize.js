@@ -10,6 +10,7 @@
     var loader_render = $(".loader_render");
     var show_spinner = $(".show_spinner");
     var error_text = $("#error_text");
+    var top_breadcrumb = $("#top_breadcrumb");
     var loader = local.loader;
 
     /**
@@ -17,7 +18,16 @@
      * Common Ajax function
      *
      */
-    function ajax_init(formData = [], getthis = null) {
+    function ajax_init(formData = [], getthis = null, topgap = null) {
+      if (top_breadcrumb.length) {
+        if (topgap != null) {
+          top_breadcrumb.css("padding-top", topgap);
+        }
+        top_breadcrumb[0].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
       loader_render.html(loader);
       error_text.empty();
       $.ajax({
@@ -45,6 +55,9 @@
             }
             if (response.data.cost_type == "login") {
               location.href = local.homeurl;
+            }
+            if (response.data.cost_type == "quotation") {
+              location.href = local.quotationurl;
             }
             if (response.data.delete == "istrue") {
               getthis.closest("tr").remove();
@@ -99,6 +112,19 @@
 
     /**
      *
+     * quotation_submission_form
+     *
+     */
+    $(document).on("submit", ".quotation_submission_form", function (e) {
+      e.preventDefault();
+      var t = $(this);
+      var formData = new FormData(this);
+      formData.append("action", "quotation_submission_form_handler");
+      ajax_init(formData, "", "100px");
+    });
+
+    /**
+     *
      * Login Form submit
      *
      */
@@ -137,11 +163,16 @@
     $(document).on("click", ".inventory_pdf_export", function () {
       var t = $(this);
       var pdfname = t.data("pdfname");
+      var layout = t.data("layout");
+      var layoutsize = "auto";
+      // if (layout != null) {
+      //   layoutsize = layout;
+      // }
       kendo.drawing
         .drawDOM($(".inventory_pdf_body"))
         .then(function (group) {
           return kendo.drawing.exportPDF(group, {
-            paperSize: "auto",
+            paperSize: layoutsize,
             margin: { left: "1cm", top: "1cm", right: "1cm", bottom: "1cm" },
           });
         })
@@ -151,6 +182,31 @@
             fileName: pdfname,
           });
         });
+    });
+
+    /**
+     *
+     * dropdown open close
+     *
+     */
+    $(document).on("click", ".dropdown_tab_click", function (e) {
+      e.stopPropagation();
+      var t = $(this);
+      var dropdown_wrap_box = t.parent().find(".dropdown_wrap_box");
+      var svg = t.find("svg");
+
+      dropdown_wrap_box.toggleClass("hidden");
+      svg.css(
+        "rotate",
+        dropdown_wrap_box.hasClass("hidden") ? "0deg" : "180deg"
+      );
+    });
+    $(document).on("click", function () {
+      $(".dropdown_wrap_box").addClass("hidden");
+      $(".dropdown_tab_click svg").css("rotate", "0deg");
+    });
+    $(document).on("dblclick", ".dropdown_tab_click", function () {
+      $(this).find("svg").css("rotate", "0deg");
     });
   });
 })(jQuery);

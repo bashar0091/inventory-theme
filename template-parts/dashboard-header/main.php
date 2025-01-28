@@ -42,7 +42,7 @@ $user_data = user_data();
             </a>
         </div>
         <div class="hidden sm:block">
-            <form action="https://formbold.com/s/unique_form_id" method="POST">
+            <!-- <form action="https://formbold.com/s/unique_form_id" method="POST">
                 <div class="relative">
                     <button class="absolute left-0 top-1/2 -translate-y-1/2">
                         <svg
@@ -70,19 +70,16 @@ $user_data = user_data();
                         placeholder="Type to search..."
                         class="w-full bg-transparent pl-9 pr-4 focus:outline-none xl:w-125" />
                 </div>
-            </form>
+            </form> -->
         </div>
 
         <div class="flex items-center gap-3 2xsm:gap-7">
             <!-- User Area -->
             <div
-                class="relative"
-                x-data="{ dropdownOpen: false }"
-                @click.outside="dropdownOpen = false">
+                class="relative">
                 <a
-                    class="flex items-center gap-4"
-                    href="#"
-                    @click.prevent="dropdownOpen = ! dropdownOpen">
+                    class="dropdown_tab_click flex items-center gap-4"
+                    href="#">
                     <span class="hidden text-right lg:block">
                         <span class="block text-sm font-medium text-black dark:text-white"><?php echo esc_html($user_data['display_name']); ?></span>
                     </span>
@@ -92,7 +89,6 @@ $user_data = user_data();
                     </span>
 
                     <svg
-                        :class="dropdownOpen && 'rotate-180'"
                         class="hidden fill-current sm:block"
                         width="12"
                         height="8"
@@ -109,13 +105,12 @@ $user_data = user_data();
 
                 <!-- Dropdown Start -->
                 <div
-                    x-show="dropdownOpen"
-                    class="absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                    class="dropdown_wrap_box hidden absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <ul
                         class="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
                         <li>
                             <a
-                                href="settings.html"
+                                href="<?php echo esc_url(home_url('/account-settings')); ?>"
                                 class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
                                 <svg
                                     class="fill-current"

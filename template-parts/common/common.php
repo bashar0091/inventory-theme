@@ -30,6 +30,7 @@ $button = $args['button'] ?? '';
             <!-- ===== Main Content Start ===== -->
             <main>
                 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    <div id="top_breadcrumb"></div>
                     <div class="flex items-center justify-between rounded-md border border-stroke bg-white p-4 py-3 dark:border-strokedark dark:bg-meta-4 sm:px-6 sm:py-5.5 xl:px-7.5 mb-5">
                         <nav>
                             <ol class="flex flex-wrap items-center gap-3">

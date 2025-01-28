@@ -8,6 +8,14 @@ $cost_text = $args['cost_text'] ?? '';
 $cost_type = $args['cost_type'] ?? '';
 $sell_new = $args['sell_new'] ?? '';
 $quotation_new = $args['quotation_new'] ?? '';
+$formClass = '';
+if($sell_new) {
+    $formClass = 'sell_submission_form';
+} elseif($quotation_new) {
+    $formClass = 'quotation_submission_form';
+} else {
+    $formClass = 'rmb_submission_form';
+}
 ?>
 <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
@@ -21,7 +29,7 @@ $quotation_new = $args['quotation_new'] ?? '';
             <?php endif; ?>
         </h3>
     </div>
-    <form action="#" class="<?php echo $sell_new ? 'sell_submission_form' : 'rmb_submission_form'; ?>" enctype="multipart/form-data">
+    <form action="#" class="<?php echo esc_attr($formClass); ?>" enctype="multipart/form-data">
         <div class="p-6.5">
             <?php if ($quotation_new): ?>
                 <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">

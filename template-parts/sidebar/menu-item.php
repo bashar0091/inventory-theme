@@ -5,6 +5,7 @@ if (!empty($menu_item)) {
     $title = $menu_item['title'];
     $icon = $menu_item['icon'];
     $submenu = $menu_item['submenu'];
+    $class = $menu_item['class'];
     $active = '';
 
     if (is_page($slug)) {
@@ -17,7 +18,7 @@ if (!empty($menu_item)) {
 ?>
     <li>
         <a
-            class="group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 <?php echo esc_attr($active); ?>"
+            class="group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 <?php echo esc_attr($class); ?> <?php echo esc_attr($active); ?>"
             href="<?php echo esc_url(empty($submenu) ? home_url('/' . $slug) : '#!'); ?>">
             <?php
             if (!empty($icon)) {

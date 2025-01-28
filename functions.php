@@ -69,6 +69,7 @@ function spe_inventory_enqueue_scripts()
 		'inrurl' => home_url('/product-list/inr'),
 		'takaurl' => home_url('/product-list/taka'),
 		'sellurl' => home_url('/sell'),
+		'quotationurl' => home_url('/quotation'),
 		'homeurl' => home_url('/'),
 		'loader' => loader_btn(),
 		'spinner' => spinnerv1(),
@@ -221,3 +222,38 @@ add_action('init', 'add_inventory_manager_role');
  *
  */
 add_filter('show_admin_bar', '__return_false');
+
+
+/**
+ * 
+ * Post type calculation
+ *
+ */
+function show_calc($post_type = '', $field = '')
+{
+	$args = array(
+		'post_type'      => $post_type,
+		'posts_per_page' => -1,
+	);
+
+	$query = new WP_Query($args);
+	$total = 0;
+
+	if ($query->have_posts()) {
+		foreach ($query->posts as $post_id) {
+			$total += (float) get_field($field, $post_id);
+		}
+	}
+
+	return $total;
+}
+
+/**
+ * 
+ * currency_symbol
+ *
+ */
+function currency_symbol()
+{
+	return '৳';
+}
