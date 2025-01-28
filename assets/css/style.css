@@ -1,0 +1,67 @@
+:root {
+  --main: rgb(28 36 52);
+}
+.centerv1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.w_130 {
+  width: 130px !important;
+}
+th {
+  font-weight: bold;
+}
+.table_v1 th,
+.table_v1 td {
+  padding: 15px;
+  text-align: left;
+}
+.table_v1 tr {
+  border-bottom: 1px solid #dbdbdb !important;
+}
+.table_v1 tbody tr:last-child {
+  border-bottom: none !important;
+}
+.cover_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.inline-grid {
+  display: inline-grid;
+}
+.max_w_165 {
+  max-width: 165px;
+}
+.fz_12 {
+  font-size: 12px;
+}
+.bg_main {
+  background: var(--main);
+}
+.spinnerv1 {
+  position: relative;
+}
+.spinnerv1 .animatespinv1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.hr1 {
+  border: none;
+  border-bottom: 1px solid #cbcbcb;
+  display: block;
+  padding-top: 25px;
+  margin-bottom: 30px;
+}
+@media (min-width: 1280px) {
+  .hidden_xl {
+    display: none !important;
+  }
+  .xl\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
