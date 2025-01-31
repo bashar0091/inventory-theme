@@ -11,17 +11,28 @@ $quotation = $args['quotation'] ?? '';
 $pdfname = $args['pdfname'] ?? '';
 $isadmin = adminon();
 
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+
 if ($sell) {
     $product_args = array(
         'post_type' => 'inventory-sell',
+        'posts_per_page' => 12,
+        'order' => 'ASC',
+        'paged' => $paged,
     );
 } elseif ($quotation) {
     $product_args = array(
         'post_type' => 'inventory-quotation',
+        'posts_per_page' => 12,
+        'order' => 'ASC',
+        'paged' => $paged,
     );
 } else {
     $product_args = array(
         'post_type' => 'inventory-products',
+        'posts_per_page' => 12,
+        'order' => 'ASC',
+        'paged' => $paged,
         'meta_query' => array(
             array(
                 'key'     => 'cost_type',
@@ -35,7 +46,7 @@ if ($sell) {
 $product_query = new WP_Query($product_args);
 ?>
 <div
-    class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+    class="mob_v4 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
     <table class="table w-full table-auto table_v1 inventory_pdf_body">
         <thead>
             <tr>
@@ -45,7 +56,6 @@ $product_query = new WP_Query($product_args);
                     <th>Billing From</th>
                     <th>Billing To</th>
                     <th>Issue Data</th>
-                    <th>Due Data</th>
                 <?php else: ?>
                     <th>Name of company</th>
                     <th>Name of Items</th>
@@ -65,7 +75,7 @@ $product_query = new WP_Query($product_args);
         <tbody>
             <?php
             if ($product_query->have_posts()) {
-                $i = 0;
+                $i = ($paged - 1) * $product_query->query_vars['posts_per_page'];
                 while ($product_query->have_posts()) {
                     $product_query->the_post();
                     $id = get_the_ID();
@@ -91,7 +101,6 @@ $product_query = new WP_Query($product_args);
                         $title = get_field('billing_from');
                         $quantity = get_field('billing_to');
                         $cost_in_rmb = get_field('date_issued');
-                        $cnf_cost = get_field('due_date');
                     }
                     $i++;
             ?>
@@ -101,12 +110,12 @@ $product_query = new WP_Query($product_args);
                         <td><?php echo wp_kses_post($title) ?></td>
                         <td><?php echo wp_kses_post($quantity) ?></td>
                         <?php if (!$sell): ?>
-                            <td><?php echo wp_kses_post($cost_in_rmb) ?></td>
-                            <td><?php echo wp_kses_post($cnf_cost) ?></td>
+                            <td><?php echo wp_kses_post(price_format($cost_in_rmb)) ?></td>
+                            <td><?php echo wp_kses_post(price_format($cnf_cost)) ?></td>
                         <?php endif; ?>
-                        <td><?php echo wp_kses_post($total_price_in_tk) ?></td>
+                        <td><?php echo wp_kses_post(price_format($total_price_in_tk)) ?></td>
                         <td>
-                            <div class="inline-grid grid-cols-2 gap-1">
+                            <div class="inline-grid grid-cols-1 md:grid-cols-2 gap-1">
                                 <?php
                                 $filegroup = [];
                                 if (!empty($product_images)):
@@ -116,8 +125,8 @@ $product_query = new WP_Query($product_args);
                                         $file_extension = pathinfo($url, PATHINFO_EXTENSION);
                                 ?>
                                         <?php if (strtolower($file_extension) === 'pdf'): ?>
-                                            <a href="<?php echo esc_url($url); ?>" target="_blank" class="h-12.5 w-15 overflow-hidden rounded-md">
-                                                <svg class="fill-current" width="40" height="40" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <a href="<?php echo esc_url($url); ?>" target="_blank" class="w_35 h_35 bdr_1 overflow-hidden rounded-md">
+                                                <svg class="fill-current" width="30" height="30" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M15.3419 4.66885L11.5204 0.843848C11.2988 0.618848 10.9942 0.506348 10.6896 0.506348H4.04344C3.10191 0.506348 2.29883 1.29385 2.29883 2.27822V8.8876C2.29883 9.2251 2.57575 9.53447 2.93575 9.53447C3.29575 9.53447 3.57267 9.25322 3.57267 8.8876V2.2501C3.57267 1.96885 3.79421 1.74385 4.07114 1.74385H10.3296V5.34385C10.3296 5.68135 10.6065 5.99072 10.9665 5.99072H14.4834V8.71885C14.4834 9.05635 14.7604 9.36572 15.1204 9.36572C15.4804 9.36572 15.7573 9.08447 15.7573 8.71885V5.5126C15.6742 5.20322 15.5634 4.89385 15.3419 4.66885ZM11.5481 2.64385L13.625 4.7251H11.5481V2.64385Z" fill=""></path>
                                                     <path d="M15.0653 14.5688C14.733 14.5688 14.4284 14.8501 14.4284 15.2157V15.7782C14.4284 16.0595 14.2069 16.2845 13.9299 16.2845H4.04379C3.76687 16.2845 3.54533 16.0595 3.54533 15.7782V15.3845C3.54533 15.047 3.26841 14.7376 2.90841 14.7376C2.54841 14.7376 2.27148 15.0188 2.27148 15.3845V15.7501C2.27148 16.7063 3.04687 17.522 4.0161 17.522H13.9023C14.8438 17.522 15.6469 16.7345 15.6469 15.7501V15.1876C15.6746 14.8501 15.3976 14.5688 15.0653 14.5688Z" fill=""></path>
                                                     <path d="M12.6014 10.6875H14.1245C14.4568 10.6875 14.7614 10.4063 14.7614 10.0407C14.7614 9.67505 14.4845 9.3938 14.1245 9.3938H12.6014C11.8537 9.3938 11.2168 10.0407 11.2168 10.8V14.2032C11.2168 14.5407 11.4937 14.85 11.8537 14.85C12.2137 14.85 12.4906 14.5688 12.4906 14.2032V12.4313H13.543C13.8753 12.4313 14.1799 12.15 14.1799 11.7844C14.1799 11.4188 13.903 11.1375 13.543 11.1375H12.463V10.7719C12.463 10.7719 12.5183 10.6875 12.6014 10.6875Z" fill=""></path>
@@ -126,7 +135,7 @@ $product_query = new WP_Query($product_args);
                                                 </svg>
                                             </a>
                                         <?php else: ?>
-                                            <a href="<?php echo esc_url($url); ?>" data-lightbox="product_img_group_<?php echo esc_attr($i); ?>" target="_blank" class="h-12.5 w-15 overflow-hidden rounded-md">
+                                            <a href="<?php echo esc_url($url); ?>" data-lightbox="product_img_group_<?php echo esc_attr($i); ?>" target="_blank" class="w_35 h_35 bdr_1 overflow-hidden rounded-md">
                                                 <img class="cover_img" src="<?php echo esc_url($url); ?>" alt="Product">
                                             </a>
                                         <?php endif; ?>
@@ -163,10 +172,33 @@ $product_query = new WP_Query($product_args);
                             </td>
                         <?php endif; ?>
                     </tr>
-            <?php
+                <?php
                 }
-                wp_reset_postdata();
+                ?>
+
+                <?php if ($product_query->max_num_pages > 1) : ?>
+                    <tr>
+                        <td colspan="9">
+                            <div class="inventory_pagination">
+                                <?php
+                                $big = 999999999;
+                                echo paginate_links(array(
+                                    'base'    => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                                    'format'  => '?paged=%#%',
+                                    'current' => max(1, $paged),
+                                    'total'   => $product_query->max_num_pages,
+                                    'prev_text' => __('&laquo; Previous', 'spe-inventory'),
+                                    'next_text' => __('Next &raquo;', 'spe-inventory'),
+                                ));
+                                ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+            <?php
             }
+            wp_reset_postdata();
             ?>
         </tbody>
     </table>
@@ -182,11 +214,11 @@ if ($sell) {
     $redirect_url = home_url('/product-list/' . $cost_type . '/' . $cost_type . '-new');
 }
 ?>
-<div class="flex items-center gap-2">
-    <a href="javascript:void(0)" data-pdfname="<?php echo esc_attr($pdfname); ?>" class="inventory_pdf_export inline-flex items-center justify-center gap-1 bg_main px-4 py-2 text-center font-medium text-white">
+<div class="mob_v2 flex items-center gap-2">
+    <a href="javascript:void(0)" data-pdfname="<?php echo esc_attr($pdfname); ?>" class="mob_v3 inventory_pdf_export inline-flex items-center justify-center gap-1 bg_main px-4 py-2 text-center font-medium text-white">
         Export PDF
     </a>
-    <a href="<?php echo esc_url($redirect_url); ?>" class="inline-flex items-center justify-center gap-1 bg-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90">
+    <a href="<?php echo esc_url($redirect_url); ?>" class="mob_v3 inline-flex items-center justify-center gap-1 bg-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90">
         <span>
             <svg fill=none height=24 viewBox="0 -0.5 25 25" width=24 xmlns=http://www.w3.org/2000/svg>
                 <g id=SVGRepo_bgCarrier stroke-width=0></g>

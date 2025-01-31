@@ -59,13 +59,13 @@ function spinnerv1($class = '')
  * Input v1
  * 
  */
-function inputv1($label = '', $name = '', $type = '', $placeholder = '', $required = false, $class = '')
+function inputv1($label = '', $name = '', $type = '', $placeholder = '', $required = false, $class = '', $value = '')
 {
 ?>
     <label for="<?php echo esc_attr($name); ?>" class="mb-3 block text-sm font-medium text-black dark:text-white">
         <?php echo wp_kses_post($label); ?>
     </label>
-    <input type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" placeholder="<?php echo esc_attr($placeholder); ?>" class="<?php echo esc_attr($class); ?> w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" <?php echo esc_attr($required ? 'required' : ''); ?>>
+    <input type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" placeholder="<?php echo esc_attr($placeholder); ?>" class="<?php echo esc_attr($class); ?> w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" <?php echo esc_attr($required ? 'required' : ''); ?> value="<?php echo esc_attr($value); ?>">
 <?php
 }
 
@@ -74,7 +74,7 @@ function inputv1($label = '', $name = '', $type = '', $placeholder = '', $requir
  * Select v1
  * 
  */
-function selectv1($label = '', $name = '', $defaultText = '', $required = false, $class = '', $options = [])
+function selectv1($label = '', $name = '', $defaultText = '', $required = false, $class = '', $options = [], $type = '')
 {
 ?>
     <label id="<?php echo esc_attr($name); ?>" class="mb-3 block text-sm font-medium text-black dark:text-white">
@@ -82,19 +82,33 @@ function selectv1($label = '', $name = '', $defaultText = '', $required = false,
     </label>
     <select name="<?php echo esc_attr($name); ?>" id="<?php echo esc_attr($name); ?>" <?php echo esc_attr($required ? 'required' : ''); ?> class="<?php echo esc_attr($class); ?> w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
         <option value=""><?php echo wp_kses_post($defaultText); ?></option>
+        <?php if ($type == 'v1') : ?>
+            <?php
+            if (!empty($options)) :
+                foreach ($options as $key => $item):
+                    $title = $item['title'];
+                    $value = $item['value'];
+                    $quantity = $item['quantity'];
+                    if ($quantity <= 0) {
+                        continue;
+                    }
+            ?>
+                    <option value="<?php echo esc_attr($value); ?>" data-quantity="<?php echo esc_attr($quantity); ?>"><?php echo wp_kses_post($title); ?></option>
         <?php
-        if (!empty($options)) :
-            foreach ($options as $key => $item):
-                $title = $item['title'];
-                $value = $item['value'];
-                $quantity = $item['quantity'];
-                if ($quantity <= 0) {
-                    continue;
-                }
+                endforeach;
+            endif;
+        endif;
         ?>
-                <option value="<?php echo esc_attr($value); ?>" data-quantity="<?php echo esc_attr($quantity); ?>"><?php echo wp_kses_post($title); ?></option>
+
+        <?php if ($type == 'v2') : ?>
+            <?php
+            if (!empty($options)) :
+                foreach ($options as $key => $item):
+            ?>
+                    <option value="<?php echo esc_attr($key); ?>"><?php echo wp_kses_post($item); ?></option>
         <?php
-            endforeach;
+                endforeach;
+            endif;
         endif;
         ?>
     </select>

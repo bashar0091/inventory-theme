@@ -12,6 +12,6 @@ get_header();
 
 $pdfname = 'Sells-Report';
 
-get_template_part('template-parts/common/product-list', null, ['sell' => true, 'pdfname' => $pdfname]);
+get_template_part('template-parts/common/product-list', null, ['sell' => true, 'pdfname' => $pdfname, 'gap' => false]);
 
 get_footer();

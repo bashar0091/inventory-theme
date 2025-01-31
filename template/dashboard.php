@@ -51,7 +51,7 @@ $symbol = currency_symbol();
       <div>
         <h4
           class="text-title-md font-bold text-black dark:text-white">
-          <?php echo wp_kses_post($symbol . ' ' . $totalsell); ?>
+          <?php echo wp_kses_post($symbol . ' ' . price_format($totalsell)); ?>
         </h4>
         <span class="text-sm font-medium">Total Sell</span>
       </div>
@@ -87,7 +87,7 @@ $symbol = currency_symbol();
       <div>
         <h4
           class="text-title-md font-bold text-black dark:text-white">
-          <?php echo wp_kses_post($symbol . ' ' . $totalbuy); ?>
+          <?php echo wp_kses_post($symbol . ' ' . price_format($totalbuy)); ?>
         </h4>
         <span class="text-sm font-medium">Total Buy</span>
       </div>
@@ -111,7 +111,7 @@ $symbol = currency_symbol();
           </span>
           <div class="w-full">
             <p class="font-semibold text-primary">Total Revenue</p>
-            <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+            <p class="text-sm font-medium"></p>
           </div>
         </div>
         <div class="flex min-w-47.5">
@@ -122,7 +122,7 @@ $symbol = currency_symbol();
           </span>
           <div class="w-full">
             <p class="font-semibold text-secondary">Total Sales</p>
-            <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+            <p class="text-sm font-medium"></p>
           </div>
         </div>
       </div>

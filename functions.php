@@ -57,6 +57,7 @@ function spe_inventory_enqueue_scripts()
 	wp_enqueue_style('style-css', get_stylesheet_directory_uri() . '/assets/css/style.css', false, '1.0.0', '');
 	// JS file 
 	wp_enqueue_script('jquery-js', 'https://code.jquery.com/jquery-3.7.1.min.js', '', '1.0.0', true);
+	wp_enqueue_script('repeater-js', get_stylesheet_directory_uri() . '/assets/js/jquery.repeater.min.js', '', '1.0.0', true);
 	wp_enqueue_script('lightbox-js', get_stylesheet_directory_uri() . '/assets/js/lightbox.min.js', '', '1.0.0', true);
 	wp_enqueue_script('kendo-js', get_stylesheet_directory_uri() . '/assets/js/kendo.all.min.js', '', '1.0.0', true);
 	wp_enqueue_script('script-js', get_stylesheet_directory_uri() . '/assets/js/script.js', '', '1.0.0', true);
@@ -256,4 +257,34 @@ function show_calc($post_type = '', $field = '')
 function currency_symbol()
 {
 	return '৳';
+}
+
+/**
+ * 
+ * optionv1
+ *
+ */
+function optionv1($type = '')
+{
+	if ($type == 'country') {
+		$option = [
+			'inr' => 'India',
+			'rmb' => 'China',
+			'taka' => 'Bangladesh',
+		];
+	}
+	return $option;
+}
+
+/**
+ * 
+ * price comma separator
+ *
+ */
+function price_format($number)
+{
+	if (!is_numeric($number)) {
+		return $number;
+	}
+	return number_format($number, $decimal_places, ',');
 }

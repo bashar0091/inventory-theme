@@ -59,6 +59,9 @@
             if (response.data.cost_type == "quotation") {
               location.href = local.quotationurl;
             }
+            if (response.data.cost_type == "account") {
+              location.reload();
+            }
             if (response.data.delete == "istrue") {
               getthis.closest("tr").remove();
             }
@@ -66,7 +69,6 @@
             error_text.html(response.data.message);
           }
           loader_render.empty();
-          console.log(response);
         },
         error: function (error) {
           console.log(error);
@@ -125,6 +127,19 @@
 
     /**
      *
+     * account_submission_form
+     *
+     */
+    $(document).on("submit", ".account_submission_form", function (e) {
+      e.preventDefault();
+      var t = $(this);
+      var formData = new FormData(this);
+      formData.append("action", "account_submission_form_handler");
+      ajax_init(formData, "");
+    });
+
+    /**
+     *
      * Login Form submit
      *
      */
@@ -152,7 +167,7 @@
       formData.append("media", media);
       t.closest(show_spinner).find("button").css("visibility", "hidden");
       t.closest(show_spinner).append(local.spinner);
-      ajax_init(formData, t);
+      ajax_init(formData, t, null);
     });
 
     /**
@@ -165,15 +180,17 @@
       var pdfname = t.data("pdfname");
       var layout = t.data("layout");
       var layoutsize = "auto";
-      // if (layout != null) {
-      //   layoutsize = layout;
-      // }
+      var gap = "1cm";
+      if (layout != null) {
+        layoutsize = layout;
+        gap = "0cm";
+      }
       kendo.drawing
         .drawDOM($(".inventory_pdf_body"))
         .then(function (group) {
           return kendo.drawing.exportPDF(group, {
             paperSize: layoutsize,
-            margin: { left: "1cm", top: "1cm", right: "1cm", bottom: "1cm" },
+            margin: { left: gap, top: gap, right: gap, bottom: gap },
           });
         })
         .done(function (data) {
@@ -207,6 +224,22 @@
     });
     $(document).on("dblclick", ".dropdown_tab_click", function () {
       $(this).find("svg").css("rotate", "0deg");
+    });
+
+    /**
+     *
+     * Repeater init
+     *
+     */
+    $(".inventory_repeater").repeater({
+      isFirstItemUndeletable: true,
+      show: function () {
+        $(this).slideDown();
+      },
+      hide: function (deleteElement) {
+        $(this).slideUp(deleteElement);
+      },
+      ready: function (setIndexes) {},
     });
   });
 })(jQuery);
